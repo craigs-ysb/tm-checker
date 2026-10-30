@@ -38,13 +38,14 @@
     margin-bottom: 16px;
   }
   label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-  input, textarea {
+  input, select, textarea {
     width: 100%;
     padding: 10px 12px;
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 15px;
     font-family: inherit;
+    background: #fff;
   }
   textarea { min-height: 72px; resize: vertical; }
   .row { display: flex; gap: 12px; margin-bottom: 14px; }
@@ -139,9 +140,56 @@
           <label for="mark">Mark / Name</label>
           <input id="mark" type="text" placeholder="e.g. Hot Maintenance or scorched tanning mousse" autofocus>
         </div>
-        <div style="max-width: 120px;">
+        <div style="max-width: 280px;">
           <label for="cls">Class</label>
-          <input id="cls" type="number" value="3" min="1" max="45">
+          <select id="cls">
+            <option value="1">1 – Chemicals</option>
+            <option value="2">2 – Paints</option>
+            <option value="3" selected>3 – Cosmetics & cleaning (tanning, soaps, perfumes)</option>
+            <option value="4">4 – Industrial oils & fuels</option>
+            <option value="5">5 – Pharmaceuticals (medicated sunscreens)</option>
+            <option value="6">6 – Metal goods</option>
+            <option value="7">7 – Machines</option>
+            <option value="8">8 – Hand tools</option>
+            <option value="9">9 – Scientific & electronic</option>
+            <option value="10">10 – Medical apparatus</option>
+            <option value="11">11 – Environmental control apparatus</option>
+            <option value="12">12 – Vehicles</option>
+            <option value="13">13 – Firearms</option>
+            <option value="14">14 – Precious metals & jewellery</option>
+            <option value="15">15 – Musical instruments</option>
+            <option value="16">16 – Paper & printed matter</option>
+            <option value="17">17 – Rubber & plastics</option>
+            <option value="18">18 – Leather goods</option>
+            <option value="19">19 – Building materials</option>
+            <option value="20">20 – Furniture</option>
+            <option value="21">21 – Household utensils (combs, brushes, sponges)</option>
+            <option value="22">22 – Ropes & fibres</option>
+            <option value="23">23 – Yarns & threads</option>
+            <option value="24">24 – Textiles</option>
+            <option value="25">25 – Clothing</option>
+            <option value="26">26 – Lace & embroidery</option>
+            <option value="27">27 – Floor coverings</option>
+            <option value="28">28 – Games & sporting goods</option>
+            <option value="29">29 – Meat & processed foods</option>
+            <option value="30">30 – Staple foods</option>
+            <option value="31">31 – Agricultural products</option>
+            <option value="32">32 – Non-alcoholic beverages</option>
+            <option value="33">33 – Alcoholic beverages</option>
+            <option value="34">34 – Tobacco</option>
+            <option value="35">35 – Advertising & business</option>
+            <option value="36">36 – Insurance & financial</option>
+            <option value="37">37 – Building construction & repair</option>
+            <option value="38">38 – Telecommunications</option>
+            <option value="39">39 – Transport & storage</option>
+            <option value="40">40 – Treatment of materials</option>
+            <option value="41">41 – Education & entertainment</option>
+            <option value="42">42 – Scientific & technological services</option>
+            <option value="43">43 – Food & drink services</option>
+            <option value="44">44 – Medical & beauty services</option>
+            <option value="45">45 – Legal & personal services</option>
+          </select>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Class 3 covers non-medicated cosmetics, tanning preparations, soaps, perfumes, essential oils.</div>
         </div>
       </div>
       <div>
