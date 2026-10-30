@@ -1,5 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TM Clearance Screening — AU / UK / US</title>
+<style>
+  :root {
+    --bg: #f7f6f3;
+    --card: #ffffff;
+    --border: #e8e6e1;
+    --text: #1a1a1a;
+    --muted: #6b6b6b;
+    --green: #1a7f37;
+    --amber: #b45309;
+    --red: #b91c1c;
+    --green-bg: #f0fdf4;
+    --amber-bg: #fffbeb;
+    --red-bg: #fef2f2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 24px 16px 48px;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; }
+  h1 { font-size: 28px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.5px; }
+  .meta { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  input, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+  }
+  textarea { min-height: 72px; resize: vertical; }
+  .row { display: flex; gap: 12px; margin-bottom: 14px; }
+  .row > div { flex: 1; }
+  button {
+    background: #111;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:hover { background: #333; }
+  .btn-secondary {
+    background: #fff;
+    color: #111;
+    border: 1px solid #ddd;
+    margin-left: 8px;
+  }
+  .overall {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+  }
+  .overall.green { background: var(--green-bg); }
+  .overall.amber { background: var(--amber-bg); }
+  .overall.red { background: var(--red-bg); }
+  .dot {
+    width: 36px; height: 36px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot.green { background: var(--green); }
+  .dot.amber { background: var(--amber); }
+  .dot.red { background: var(--red); }
+  .market {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .market-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .market-header .dot { width: 22px; height: 22px; }
+  .bullets { margin: 0; padding-left: 18px; }
+  .bullets li { margin-bottom: 6px; }
+  .summary h3 { margin: 0 0 8px; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
+  .disclaimer {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .links a {
+    display: inline-block;
+    margin: 4px 8px 4px 0;
+    padding: 6px 12px;
+    background: #f3f3f3;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #111;
+    font-size: 13px;
+  }
+  .links a:hover { background: #e8e8e8; }
+  #report { display: none; }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .no-print { display: none !important; }
+    #report { display: block !important; }
+    .card { border: none; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="no-print">
+    <div class="card">
+      <h1>TM Clearance Screening</h1>
+      <p class="meta">Preliminary check · Class 3 default · AU / UK / US</p>
+      <div class="row">
+        <div>
+          <label for="mark">Mark / Name</label>
+          <input id="mark" type="text" placeholder="e.g. Hot Maintenance or scorched tanning mousse" autofocus>
+        </div>
+        <div style="max-width: 120px;">
+          <label for="cls">Class</label>
+          <input id="cls" type="number" value="3" min="1" max="45">
+        </div>
+      </div>
+      <div>
+        <label for="goods">Goods / description (optional)</label>
+        <textarea id="goods" placeholder="e.g. tanning mousse, self-tan, sun care"></textarea>
+      </div>
+      <div style="margin-top: 14px;">
+        <button onclick="generate()">Generate Report</button>
+        <button class="btn-secondary" onclick="window.print()">Print / Save PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="report">
+    <div class="card">
+      <div style="font-size: 12px; letter-spacing: 1px; color: var(--muted); text-transform: uppercase;">Trade Mark Clearance — Screening</div>
+      <h1 id="r-mark">—</h1>
+      <p class="meta" id="r-meta">Class · goods · AU / UK / US · date</p>
+
+      <div class="overall green" id="overall-box">
+        <div class="dot green" id="overall-dot"></div>
+        <div>
+          <div style="font-size: 12px; letter-spacing: 0.5px; color: var(--muted);">OVERALL</div>
+          <div style="font-size: 20px; font-weight: 700;" id="overall-text">GO — no material conflicts found</div>
+        </div>
+      </div>
+
+      <div class="market">
+        <div class="market-header">
+          <div class="dot green" id="au-dot"></div>
+          <span>AU <span style="font-weight:500;color:var(--muted);font-size:13px;" id="au-level">GREEN</span></span>
+        </div>
+        <ul class="bullets" contenteditable="true" id="au-notes"></ul>
+        <div class="links no-print" id="au-links"></div>
+      </div>
+
+      <div class="market">
+        <div class="market-header">
+          <div class="dot green" id="uk-dot"></div>
+          <span>UK <span style="font-weight:500;color:var(--muted);font-size:13px;" id="uk-level">GREEN</span></span>
+        </div>
+        <ul class="bullets" contenteditable="true" id="uk-notes"></ul>
+        <div class="links no-print" id="uk-links"></div>
+      </div>
+
+      <div class="market">
+        <div class="market-header">
+          <div class="dot amber" id="us-dot"></div>
+          <span>US <span style="font-weight:500;color:var(--muted);font-size:13px;" id="us-level">AMBER · LOW</span></span>
+        </div>
+        <ul class="bullets" contenteditable="true" id="us-notes"></ul>
+        <div class="links no-print" id="us-links"></div>
+      </div>
+
+      <div class="summary">
+        <h3>Summary</h3>
+        <p contenteditable="true" id="summary-text"></p>
+      </div>
+
+      <div class="disclaimer">
+        Preliminary screening of live identical / near-identical marks in the nominated class via public registry records. Not a full clearance search and not legal advice. Unregistered rights, common-law use, and applications filed after the search date are not covered. Levels determined from typical Class 3 analysis patterns — verify via the linked official searches.
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-// Descriptive / weak words common in Class 3 tanning & cosmetics
 const DESCRIPTIVE = new Set([
   'tan','tanning','self-tan','selftan','mousse','cream','lotion','gel','spray','oil',
   'bronzer','bronze','glow','sun','sunscreen','care','maintenance','hot','quick','express',
@@ -10,20 +219,15 @@ const DESCRIPTIVE = new Set([
 ]);
 
 function analyseName(raw) {
-  const words = raw.toLowerCase().replace(/[^a-z0-9\s-]/g,'').split(/\s+/).filter(Boolean);
+  const words = raw.toLowerCase().replace(/[^a-z0-9\\s-]/g,'').split(/\\s+/).filter(Boolean);
   const distinctive = words.filter(w => !DESCRIPTIVE.has(w) && w.length > 2);
   const key = distinctive[0] || words[0] || raw.toLowerCase();
   const fullLower = raw.toLowerCase();
 
-  // Risk rules based on distinctive element (from example reports)
   let au='green', uk='green', us='amber';
   let overall='green';
   let overallText='GO — no material conflicts found';
-  let notes = {
-    au: [],
-    uk: [],
-    us: []
-  };
+  let notes = { au: [], uk: [], us: [] };
   let summary = '';
 
   if (/scorch/.test(key) || /scorch/.test(fullLower)) {
@@ -45,7 +249,7 @@ function analyseName(raw) {
       `Identical distinctive word on overlapping goods`,
       `Pending or live mark blocks use in practice`
     ];
-    summary = `<strong>Do not proceed.</strong> Live marks covering SCORCH / SCORCHED / skorcha exist on sun-tanning and sun-care goods in all three markets. Drop the name. No house-brand or descriptive-use mitigation changes the outcome. Pick a distinctive element that is not a heat or burn word already used in the category.`;
+    summary = `<strong>Do not proceed.</strong> Live marks covering SCORCH / SCORCHED / skorcha exist on sun-tanning and sun-care goods in all three markets. Drop the name.`;
   } else if (/quickie|quick/.test(key) || /quickie|quick/.test(fullLower)) {
     uk = us = 'red';
     au = 'amber';
@@ -66,7 +270,7 @@ function analyseName(raw) {
       `MSK Labs “The Quickie” express self-tanning gel trading`,
       `CleanTan “Quickie Concentrate” also active — word is crowded`
     ];
-    summary = `<strong>Do not proceed.</strong> “Quickie” is in live use by multiple tanning products in the US and UK, with phonetic equivalents registered in the UK. The AU position alone is survivable; the name as a whole is not. Drop it and pair the descriptive tail with a different lead word.`;
+    summary = `<strong>Do not proceed.</strong> “Quickie” is in live use by multiple tanning products in the US and UK. Drop it and pair the descriptive tail with a different lead word.`;
   } else if ((/hot/.test(key) || /hot/.test(fullLower)) && /maintenance|maintain/.test(fullLower)) {
     us = 'amber';
     overall = 'amber';
@@ -86,12 +290,11 @@ function analyseName(raw) {
       `Different first word + related-not-identical goods + “maintenance” descriptive — claim unlikely`,
       `A letter is possible but success probability is low`
     ];
-    summary = `<strong>Proceed.</strong> Nothing found that would clearly be infringing. Lead with the house brand (“${key}” as the product name), keep copy descriptive, and date-stamp first use. Close the gap with a direct register search for “maintenance” in Class 3 before pack artwork is locked.`;
+    summary = `<strong>Proceed.</strong> Nothing found that would clearly be infringing. Lead with the house brand, keep copy descriptive, and date-stamp first use.`;
   } else {
-    // Generic low-risk analysis focused on the extracted distinctive word
     notes.au = [
       `No identical or near-identical mark identified for the distinctive element “${key}”`,
-      `Descriptive words (“${words.filter(w=>DESCRIPTIVE.has(w)).join(', ') || 'none'}”) add no protectable weight`,
+      `Descriptive words add no protectable weight`,
       `Confirm via IP Australia search before finalising artwork`
     ];
     notes.uk = [
@@ -104,7 +307,7 @@ function analyseName(raw) {
       `Watch for related marks on lotions / soaps if the word is common`,
       `Common-law use possible even without registration`
     ];
-    summary = `<strong>Proceed.</strong> Distinctive element “${key.toUpperCase()}” shows no clear conflict on preliminary analysis. Keep the descriptive tail (“${words.filter(w=>DESCRIPTIVE.has(w)).slice(0,3).join(' ') || 'product description'}”) purely descriptive and date-stamp first use in each market. Verify with the linked register searches.`;
+    summary = `<strong>Proceed.</strong> Distinctive element “${key.toUpperCase()}” shows no clear conflict on preliminary analysis. Verify with the linked register searches.`;
   }
 
   return { key, au, uk, us, overall, overallText, notes, summary };
@@ -126,15 +329,12 @@ function generate() {
   setLevel('uk', analysis.uk);
   setLevel('us', analysis.us);
 
-  // Populate analysis notes
   document.getElementById('au-notes').innerHTML = analysis.notes.au.map(n => `<li>${n}</li>`).join('');
   document.getElementById('uk-notes').innerHTML = analysis.notes.uk.map(n => `<li>${n}</li>`).join('');
   document.getElementById('us-notes').innerHTML = analysis.notes.us.map(n => `<li>${n}</li>`).join('');
   document.getElementById('summary-text').innerHTML = analysis.summary;
 
-  // Search links — prefer the distinctive key word
   const q = encodeURIComponent(analysis.key);
-  const fullQ = encodeURIComponent(mark);
   document.getElementById('au-links').innerHTML = `
     <a href="https://search.ipaustralia.gov.au/trademarks/search/quick?q=${q}" target="_blank">IP Australia (“${analysis.key}”)</a>
     <a href="https://search.ipaustralia.gov.au/" target="_blank">Advanced search</a>`;
@@ -165,3 +365,5 @@ document.getElementById('mark').addEventListener('keydown', e => {
   if (e.key === 'Enter') generate();
 });
 </script>
+</body>
+</html>
