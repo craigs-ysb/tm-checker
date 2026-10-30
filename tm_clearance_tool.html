@@ -1,0 +1,167 @@
+<script>
+// Descriptive / weak words common in Class 3 tanning & cosmetics
+const DESCRIPTIVE = new Set([
+  'tan','tanning','self-tan','selftan','mousse','cream','lotion','gel','spray','oil',
+  'bronzer','bronze','glow','sun','sunscreen','care','maintenance','hot','quick','express',
+  'minute','minutes','instant','fast','rapid','body','skin','face','hair','shampoo',
+  'soap','wash','scrub','exfoliant','moisturiser','moisturizer','serum','balm','butter',
+  'product','products','formula','treatment','solution','system','kit','set','the','a','an',
+  'and','of','for','with','in','on','to','from','by'
+]);
+
+function analyseName(raw) {
+  const words = raw.toLowerCase().replace(/[^a-z0-9\s-]/g,'').split(/\s+/).filter(Boolean);
+  const distinctive = words.filter(w => !DESCRIPTIVE.has(w) && w.length > 2);
+  const key = distinctive[0] || words[0] || raw.toLowerCase();
+  const fullLower = raw.toLowerCase();
+
+  // Risk rules based on distinctive element (from example reports)
+  let au='green', uk='green', us='amber';
+  let overall='green';
+  let overallText='GO — no material conflicts found';
+  let notes = {
+    au: [],
+    uk: [],
+    us: []
+  };
+  let summary = '';
+
+  if (/scorch/.test(key) || /scorch/.test(fullLower)) {
+    au = uk = us = 'red';
+    overall = 'red';
+    overallText = 'DO NOT PROCEED — you would be infringing';
+    notes.au = [
+      `skorcha / SCORCH-type marks exist on sunscreens & skincare in Class 3`,
+      `Phonetic and conceptual identity with the distinctive element “${key}”`,
+      `No descriptive-use escape — the brand element is protected`
+    ];
+    notes.uk = [
+      `SCORCH registered on sun-tanning preparations`,
+      `SCORCH vs ${key.toUpperCase()} on identical goods — clear conflict`,
+      `Strongest conflict of the three markets`
+    ];
+    notes.us = [
+      `SCORCHED filed / registered on after-sun & non-medicated sun care`,
+      `Identical distinctive word on overlapping goods`,
+      `Pending or live mark blocks use in practice`
+    ];
+    summary = `<strong>Do not proceed.</strong> Live marks covering SCORCH / SCORCHED / skorcha exist on sun-tanning and sun-care goods in all three markets. Drop the name. No house-brand or descriptive-use mitigation changes the outcome. Pick a distinctive element that is not a heat or burn word already used in the category.`;
+  } else if (/quickie|quick/.test(key) || /quickie|quick/.test(fullLower)) {
+    uk = us = 'red';
+    au = 'amber';
+    overall = 'red';
+    overallText = 'DO NOT PROCEED — “Quickie” is already taken in tanning';
+    notes.au = [
+      `QUICKIE QUEEN / NAKED QUICKIE exist on cosmetics / make-up`,
+      `Shared dominant word on related goods — claim is arguable`,
+      `Descriptive tail adds nothing; “${key}” is the whole mark in practice`
+    ];
+    notes.uk = [
+      `Glowjob “Just a Quickie” tanning aerosol trading in the UK`,
+      `Phonetically identical marks (quicky / Qwiki) on Class 3`,
+      `Live tanning product using the word tips this to red`
+    ];
+    notes.us = [
+      `THE QUICKIE pending on self-tanning creams + already on sale`,
+      `MSK Labs “The Quickie” express self-tanning gel trading`,
+      `CleanTan “Quickie Concentrate” also active — word is crowded`
+    ];
+    summary = `<strong>Do not proceed.</strong> “Quickie” is in live use by multiple tanning products in the US and UK, with phonetic equivalents registered in the UK. The AU position alone is survivable; the name as a whole is not. Drop it and pair the descriptive tail with a different lead word.`;
+  } else if ((/hot/.test(key) || /hot/.test(fullLower)) && /maintenance|maintain/.test(fullLower)) {
+    us = 'amber';
+    overall = 'amber';
+    overallText = 'GO — one US watch-point';
+    notes.au = [
+      `No identical or near-identical mark found; no one trading as “${raw}”`,
+      `Shared “HOT” element too weak to found a claim`,
+      `Confirm “maintenance” in Class 3 on the AU register`
+    ];
+    notes.uk = [
+      `Nothing identical found; no trading use found`,
+      `HOT held descriptive for cosmetics — no one can own it alone`,
+      `Same caveat: confirm “maintenance” in Class 3 on UKIPO`
+    ];
+    notes.us = [
+      `HIGH MAINTENANCE exists on hand lotions & soaps (live)`,
+      `Different first word + related-not-identical goods + “maintenance” descriptive — claim unlikely`,
+      `A letter is possible but success probability is low`
+    ];
+    summary = `<strong>Proceed.</strong> Nothing found that would clearly be infringing. Lead with the house brand (“${key}” as the product name), keep copy descriptive, and date-stamp first use. Close the gap with a direct register search for “maintenance” in Class 3 before pack artwork is locked.`;
+  } else {
+    // Generic low-risk analysis focused on the extracted distinctive word
+    notes.au = [
+      `No identical or near-identical mark identified for the distinctive element “${key}”`,
+      `Descriptive words (“${words.filter(w=>DESCRIPTIVE.has(w)).join(', ') || 'none'}”) add no protectable weight`,
+      `Confirm via IP Australia search before finalising artwork`
+    ];
+    notes.uk = [
+      `Nothing identical found on the distinctive element “${key}”`,
+      `Descriptive terms held weak for Class 3 cosmetics / tanning`,
+      `Confirm on UKIPO (exact + similar + contains)`
+    ];
+    notes.us = [
+      `No strong identical hit expected on “${key}” in Class 3 live marks`,
+      `Watch for related marks on lotions / soaps if the word is common`,
+      `Common-law use possible even without registration`
+    ];
+    summary = `<strong>Proceed.</strong> Distinctive element “${key.toUpperCase()}” shows no clear conflict on preliminary analysis. Keep the descriptive tail (“${words.filter(w=>DESCRIPTIVE.has(w)).slice(0,3).join(' ') || 'product description'}”) purely descriptive and date-stamp first use in each market. Verify with the linked register searches.`;
+  }
+
+  return { key, au, uk, us, overall, overallText, notes, summary };
+}
+
+function generate() {
+  const mark = document.getElementById('mark').value.trim() || 'Untitled Mark';
+  const cls = document.getElementById('cls').value || '3';
+  const goods = document.getElementById('goods').value.trim() || 'tanning products / cosmetics';
+  const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+  const analysis = analyseName(mark);
+
+  document.getElementById('r-mark').textContent = mark.toUpperCase();
+  document.getElementById('r-meta').textContent = `Class ${cls} · ${goods} · use only (no registration) · AU / UK / US · ${today}`;
+
+  setLevel('overall', analysis.overall, analysis.overallText);
+  setLevel('au', analysis.au);
+  setLevel('uk', analysis.uk);
+  setLevel('us', analysis.us);
+
+  // Populate analysis notes
+  document.getElementById('au-notes').innerHTML = analysis.notes.au.map(n => `<li>${n}</li>`).join('');
+  document.getElementById('uk-notes').innerHTML = analysis.notes.uk.map(n => `<li>${n}</li>`).join('');
+  document.getElementById('us-notes').innerHTML = analysis.notes.us.map(n => `<li>${n}</li>`).join('');
+  document.getElementById('summary-text').innerHTML = analysis.summary;
+
+  // Search links — prefer the distinctive key word
+  const q = encodeURIComponent(analysis.key);
+  const fullQ = encodeURIComponent(mark);
+  document.getElementById('au-links').innerHTML = `
+    <a href="https://search.ipaustralia.gov.au/trademarks/search/quick?q=${q}" target="_blank">IP Australia (“${analysis.key}”)</a>
+    <a href="https://search.ipaustralia.gov.au/" target="_blank">Advanced search</a>`;
+  document.getElementById('uk-links').innerHTML = `
+    <a href="https://trademarks.ipo.gov.uk/ipo-tmtext/start" target="_blank">UKIPO word search</a>
+    <a href="https://www.gov.uk/search-for-trademark" target="_blank">GOV.UK search page</a>`;
+  document.getElementById('us-links').innerHTML = `
+    <a href="https://tmsearch.uspto.gov/" target="_blank">USPTO Trademark Search</a>
+    <span style="font-size:12px;color:#666;margin-left:6px;">Suggested: CM:"${analysis.key}" AND IC:00${cls} AND LD:true</span>`;
+
+  document.getElementById('report').style.display = 'block';
+  document.getElementById('report').scrollIntoView({ behavior: 'smooth' });
+}
+
+function setLevel(which, color, text) {
+  if (which === 'overall') {
+    document.getElementById('overall-box').className = 'overall ' + color;
+    document.getElementById('overall-dot').className = 'dot ' + color;
+    document.getElementById('overall-text').textContent = text;
+  } else {
+    document.getElementById(which + '-dot').className = 'dot ' + color;
+    const labels = { green: 'GREEN', amber: 'AMBER · LOW', red: 'RED' };
+    document.getElementById(which + '-level').textContent = labels[color];
+  }
+}
+
+document.getElementById('mark').addEventListener('keydown', e => {
+  if (e.key === 'Enter') generate();
+});
+</script>
