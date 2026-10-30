@@ -237,8 +237,8 @@
 
       <div class="market">
         <div class="market-header">
-          <div class="dot amber" id="us-dot"></div>
-          <span>US <span style="font-weight:500;color:var(--muted);font-size:13px;" id="us-level">AMBER · LOW</span></span>
+          <div class="dot green" id="us-dot"></div>
+          <span>US <span style="font-weight:500;color:var(--muted);font-size:13px;" id="us-level">GREEN</span></span>
         </div>
         <ul class="bullets" contenteditable="true" id="us-notes"></ul>
         <div class="links no-print" id="us-links"></div>
@@ -272,7 +272,7 @@ function analyseName(raw) {
   const key = distinctive[0] || words[0] || raw.toLowerCase();
   const fullLower = raw.toLowerCase();
 
-  let au='green', uk='green', us='amber';
+  let au='green', uk='green', us='green';
   let overall='green';
   let overallText='GO — no material conflicts found';
   let notes = { au: [], uk: [], us: [] };
